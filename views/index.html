@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Information Security and Quality Assurance Project 1: Metric/Imp Converter</title>
+    <meta name="description" content="A cool thing made with HyperDev">
+    <link id="favicon" rel="icon" href="https://hyperdev.com/favicon-app.ico" type="image/x-icon">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="./public/style.css">
+  </head>
+  <body>
+    <div class="container">  
+      <header>
+        <h1 class="text-center">
+          Project 1: Metric/Imp Converter
+        </h1>
+      </header>
+      <div id='userstories' style='margin-left: 5%; margin-top: 5%'>
+        <h3>User Stories</h3>
+        <ol>
+          <li>I will help prevent the client from trying to guess(sniff) the MIME type.</li>
+          <li>I will prevent cross-site scripting (XSS) attacks.</li>
+          <li>I can <b>GET</b> <code>/api/convert</code> with a single parameter containing an accepted number and unit and have it converted.</li>
+          <li>Hint: Split the input by looking for the index of the first character.</li>
+          <li>I can convert 'gal' to 'L' and vice versa. <b>(1 gal to 3.78541 L)</b></li>
+          <li>I can convert 'lbs' to 'kg' and vice versa. <b>(1 lbs to 0.453592 kg)</b></li> 
+          <li>I can convert 'mi' to 'km' and vice versa. <b>(1 mi to 1.60934 km)</b></li>
+          <li>If my unit of measurement is invalid, returned will be 'invalid unit'.</li>
+          <li>If my number is invalid, returned with will 'invalid number'.</li>
+          <li>If both are invalid, return will be 'invalid number and unit'.</li>
+          <li>I can use fractions, decimals or both in my parameter(ie. 5, 1/2, 2.5/6), but if nothing is provided it will default to 1.</li>
+          <li>My return will consist of the initNum, initUnit, returnNum, returnUnit, and string spelling out units in format <code>{initNum} {initial_Units} converts to {returnNum} {return_Units}</code> with the result rounded to 5 decimals.</li>
+          <li>All 16 unit tests are complete and passing.</li>
+          <li>All 5 functional tests are complete and passing.</li>
+        </ol>
+        <h3>Example usage:</h3>
+        <a href="https://inf-sec-qual-proj1-metric-imperial-converter-roger.glitch.me/api/convert?input=4gal"><code>/api/convert?input=4gal</code></a> <br>
+        <a href="https://inf-sec-qual-proj1-metric-imperial-converter-roger.glitch.me/api/convert?input=1/2km"><code>/api/convert?input=1/2km</code></a><br>
+        <a href="https://inf-sec-qual-proj1-metric-imperial-converter-roger.glitch.me/api/convert?input=5.4/3lbs"><code>/api/convert?input=5.4/3lbs</code></a><br>
+        <a href="https://inf-sec-qual-proj1-metric-imperial-converter-roger.glitch.me/api/convert?input=kg"><code>/api/convert?input=kg</code></a><br>
+        <h3>Example return:</h3>
+        <code>{initNum: 3.1, initUnit: 'mi', returnNum: 5.0000008, returnUnit: 'km', string: '3.1 miles converts to 5.00002 kilometers'}</code>
+      </div>
+      <hr style='margin: 50px'>
+      <div id='testui' style='margin-left: 5%'>
+        <h2 style="text-align: left">Front-End:</h2>
+        <form id="convertForm" class="border" action="/api/convert" method="post">
+          <div class="form-group">
+            <label for="unitSelect">Select your units for conversion</label>
+            <select class="form-control" id="unitSelect" name="selectUnits">
+              <option>gal to L</option>
+              <option>L to gal</option>       
+              <option>lbs to kg</option>
+              <option>kg to lbs</option>
+              <option>mi to km</option>             
+              <option>km to mi</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="convertField">Input your values</label>
+            <input class="form-control" type="text" id="convertField" name="unitValue" placeholder="3.1">
+            <!-- <input class="form-control"id="convert" type="submit" value='Convert!'>-->
+          </div>
+          <div class="form-group">
+            <div class="col-md-12 text-center"> 
+              <input class="btn btn-primary" id="convert" type="submit" value="Convert">
+            </div>
+          </div>
+        </form>
+        <p id='result'></p>
+        <code id='jsonResult'></code>
+      </div>
+      <hr style='margin: 50px; margin-top: 200px'>
+    </div>  
+    <!-- Your web-app is https, so your scripts need to be too -->
+    <!-- I added-->
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <!-- I added-->
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"
+            integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00="
+            crossorigin="anonymous"></script>
+    <!--<script>
+      $(function() {
+        $('#convertForm').submit(function() {
+          event.preventDefault();
+          $.ajax({
+            url: '/api/convert',
+            type: 'get',
+            data: $('#convertForm').serialize(),
+            success: function(data) {
+              $('#result').text(data.string || data);
+              $('#jsonResult').text(JSON.stringify(data));
+            }
+          });
+        });
+      });
+   </script>-->
+  </body>
+</html>
